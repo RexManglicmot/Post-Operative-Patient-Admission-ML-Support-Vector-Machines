@@ -92,6 +92,43 @@ dim(data)
 
     ## [1] 89  9
 
+Calling the dim function, we have 89 rows and 9 columns. According to
+the UCI website, there should be 90 rows. It would seem that the column
+names are actually an observation and adding that back to the dataframe
+would make the dataset whole. Let’s create a new row.
+
+Also, because the original column names are missing from the dataset, we
+would have to assume that the column names go in the order in which it
+was presented on the UCI website. As such, I will rename the columns
+accordingly.
+
+``` r
+#add another row the the dataset filled with values from the column
+#row will added to the bottom of the dataset
+data[nrow(data) +1,] <- c('mid', 'low', 'excellent', 'mid', 'stable', 'stable', 'stable', '15', 'A')
+
+#check the last row
+tail(data, 1)
+```
+
+    ##    mid low excellent mid.1 stable stable.1 stable.2 X15 A
+    ## 90 mid low excellent   mid stable   stable   stable  15 A
+
+``` r
+#change column names and make them shorter
+colnames(data) <- c('itemp', 'stemp', 'osat', 'bp', 'stabitemp', 'stabstep', 'stabosat', 'comf', 'deci')
+
+#check if it worked
+names(data)
+```
+
+    ## [1] "itemp"     "stemp"     "osat"      "bp"        "stabitemp" "stabstep" 
+    ## [7] "stabosat"  "comf"      "deci"
+
+``` r
+#change to appropiate class
+```
+
 ## Support Vector Machines
 
 ## Limitations
