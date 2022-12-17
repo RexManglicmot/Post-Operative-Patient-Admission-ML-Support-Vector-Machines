@@ -71,7 +71,7 @@ data <- read.csv(url, header=TRUE)
 
 ## Cleaning the Data
 
-OH BOY, we got some cleaning to do!
+**OH BOY**, we got some cleaning to do!
 
 ``` r
 #view the first few rows of the data
@@ -125,9 +125,72 @@ names(data)
     ## [1] "itemp"     "stemp"     "osat"      "bp"        "stabitemp" "stabstep" 
     ## [7] "stabosat"  "comf"      "deci"
 
+Looks good!
+
 ``` r
-#change to appropiate class
+#since most of the columns are fators lets change to factor class
+data <- as.data.frame(unclass(data), stringsAsFactors = TRUE)
+
+#change comf column to a numeric class
+data$comf <- as.numeric(data$comf)
+
+#check the class of all columns 
+sapply(data, class)
 ```
+
+    ##     itemp     stemp      osat        bp stabitemp  stabstep  stabosat      comf 
+    ##  "factor"  "factor"  "factor"  "factor"  "factor"  "factor"  "factor" "numeric" 
+    ##      deci 
+    ##  "factor"
+
+Looks good!
+
+Let’s look for any NA values
+
+``` r
+#check for NAs
+sum(is.na(data))
+```
+
+    ## [1] 0
+
+``` r
+#check for NAs via another way
+any(is.na(data))
+```
+
+    ## [1] FALSE
+
+``` r
+#check for NAs a third way
+which(is.na(data))
+```
+
+    ## integer(0)
+
+``` r
+#check a furth way #need to figure why a "2" is there
+apply(is.na(data),2,sum)
+```
+
+    ##     itemp     stemp      osat        bp stabitemp  stabstep  stabosat      comf 
+    ##         0         0         0         0         0         0         0         0 
+    ##      deci 
+    ##         0
+
+``` r
+#last check with sapply
+sapply(data, function(x) sum(is.na(x)))
+```
+
+    ##     itemp     stemp      osat        bp stabitemp  stabstep  stabosat      comf 
+    ##         0         0         0         0         0         0         0         0 
+    ##      deci 
+    ##         0
+
+Looks good!
+
+Convert the factors to numbers for model
 
 ## Support Vector Machines
 

@@ -58,7 +58,7 @@ data <- read.csv(url, header=TRUE)
 ```
 
 ## Cleaning the Data
-OH BOY, we got some cleaning to do!
+**OH BOY**, we got some cleaning to do!
 ```{r}
 #view the first few rows of the data
 head(data)
@@ -82,11 +82,44 @@ colnames(data) <- c('itemp', 'stemp', 'osat', 'bp', 'stabitemp', 'stabstep', 'st
 #check if it worked
 names(data)
 ```
+Looks good!
 
 ```{r}
-#change to appropiate class
+#since most of the columns are fators lets change to factor class
+data <- as.data.frame(unclass(data), stringsAsFactors = TRUE)
+
+#change comf column to a numeric class
+data$comf <- as.numeric(data$comf)
+
+#check the class of all columns 
+sapply(data, class)
+```
+Looks good!
+
+Let's look for any NA values
+```{r}
+#check for NAs
+sum(is.na(data))
+
+#check for NAs via another way
+any(is.na(data))
+
+#check for NAs a third way
+which(is.na(data))
+
+#check a furth way #need to figure why a "2" is there
+apply(is.na(data),2,sum)
+
+#last check with sapply
+sapply(data, function(x) sum(is.na(x)))
+```
+Looks good!
+
+Convert the factors to numbers for model
+```{r}
 
 ```
+
 
 
 ## Support Vector Machines
