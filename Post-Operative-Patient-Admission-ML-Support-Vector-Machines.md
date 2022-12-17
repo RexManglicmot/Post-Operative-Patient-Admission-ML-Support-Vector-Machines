@@ -21,7 +21,23 @@ Rex Manglicmot
 
 ## Status: Continuing Working Document
 
+Hi everyone. I’m continuing building my data analysis and R skills. As
+such, I would love feedback to better improve this project via
+<rexmanglicmot@gmail.com>. Any mistakes and misrepresentation of the
+data are my own.
+
+Things Need to Do/Questions:
+
+-   **find ‘?’ FIRST BEFORE changing columns to factors, otherwise it
+    will change the ? into 1.** (major self-inflicted headache)
+-   Why is the “A” still there?
+-   Need to take out the “?” in the dataset
+-   Concept on SVM
+-   Work on intro + cite sources
+
 ## Introduction
+
+![](https://anesthesiology.weill.cornell.edu/sites/default/files/resize/styles/panopoly_image_original/public/media_uploads/melvin_or_dsc_8144-864x485.jpg?itok=_1VvIWLc)
 
 The attributes are as follows:
 
@@ -57,6 +73,7 @@ The attributes are as follows:
 
 ``` r
 library(tidyverse)
+library(plyr)
 ```
 
 ## Loading the Data
@@ -66,7 +83,7 @@ library(tidyverse)
 url <- 'https://archive.ics.uci.edu/ml/machine-learning-databases/postoperative-patient-data/post-operative.data'
 
 #load the data
-data <- read.csv(url, header=TRUE)
+data_orig <- read.csv(url, header=TRUE)
 ```
 
 ## Cleaning the Data
@@ -75,7 +92,7 @@ data <- read.csv(url, header=TRUE)
 
 ``` r
 #view the first few rows of the data
-head(data)
+head(data_orig)
 ```
 
     ##    mid  low excellent mid.1 stable stable.1   stable.2 X15  A
@@ -87,7 +104,7 @@ head(data)
     ## 6  mid  low excellent  high stable   stable mod-stable  05  S
 
 ``` r
-dim(data)
+dim(data_orig)
 ```
 
     ## [1] 89  9
@@ -103,6 +120,9 @@ was presented on the UCI website. As such, I will rename the columns
 accordingly.
 
 ``` r
+#make a cope
+data <- data_orig
+
 #add another row the the dataset filled with values from the column
 #row will added to the bottom of the dataset
 data[nrow(data) +1,] <- c('mid', 'low', 'excellent', 'mid', 'stable', 'stable', 'stable', '15', 'A')
@@ -125,23 +145,69 @@ names(data)
     ## [1] "itemp"     "stemp"     "osat"      "bp"        "stabitemp" "stabstep" 
     ## [7] "stabosat"  "comf"      "deci"
 
+``` r
+#check for ?
+any(data =='?')
+```
+
+    ## [1] TRUE
+
+``` r
+#send location!
+which(data == '?', arr.ind=TRUE)
+```
+
+    ##    row col
+    ## 46  46   8
+    ## 48  48   8
+    ## 70  70   8
+
+``` r
+#find the uniques values in each column
+uni <- lapply(data_orig, unique)
+
+uni
+```
+
+    ## $mid
+    ## [1] "mid"  "high" "low" 
+    ## 
+    ## $low
+    ## [1] "high" "low"  "mid" 
+    ## 
+    ## $excellent
+    ## [1] "excellent" "good"     
+    ## 
+    ## $mid.1
+    ## [1] "high" "mid"  "low" 
+    ## 
+    ## $stable
+    ## [1] "stable"   "unstable"
+    ## 
+    ## $stable.1
+    ## [1] "stable"     "unstable"   "mod-stable"
+    ## 
+    ## $stable.2
+    ## [1] "stable"     "mod-stable" "unstable"  
+    ## 
+    ## $X15
+    ## [1] "10" "15" "05" "07" "?" 
+    ## 
+    ## $A
+    ## [1] "S"  "A"  "A " "I"
+
 Looks good!
 
 ``` r
-#since most of the columns are fators lets change to factor class
-data <- as.data.frame(unclass(data), stringsAsFactors = TRUE)
+# #since most of the columns are fators lets change to factor class
+# data <- as.data.frame(unclass(data), stringsAsFactors = TRUE)
 
-#change comf column to a numeric class
-data$comf <- as.numeric(data$comf)
-
-#check the class of all columns 
-sapply(data, class)
+# #change comf column to a numeric class
+# data$comf <- as.numeric(data$comf)
+# 
+# #check the class of all columns 
+# sapply(data, class)
 ```
-
-    ##     itemp     stemp      osat        bp stabitemp  stabstep  stabosat      comf 
-    ##  "factor"  "factor"  "factor"  "factor"  "factor"  "factor"  "factor" "numeric" 
-    ##      deci 
-    ##  "factor"
 
 Looks good!
 
@@ -190,7 +256,91 @@ sapply(data, function(x) sum(is.na(x)))
 
 Looks good!
 
-Convert the factors to numbers for model
+Convert the factors to numbers for modeling. Replace values in each of
+the appropriate columns.
+
+``` r
+#convert itemp column
+revalue(data$itemp, c('low' = 1, 
+                      'mid' = 2,
+                      'high' = 3)) -> data$itemp
+
+#convert stemp column
+revalue(data$stemp, c('low' = 1, 
+                      'mid' = 2,
+                      'high' = 3)) -> data$stemp
+
+#convert stemp osat
+revalue(data$osat, c('excellent' = 1, 
+                      'good' = 2,
+                      'fair' = 3,
+                     'poor' = 4)) -> data$osat
+
+#convert bp column
+revalue(data$bp, c('low' = 1, 
+                  'mid' = 2,
+                  'high' = 3)) -> data$bp
+
+#convert stabitemp
+revalue(data$stabitemp, c('stable' = 1, 
+                  'mod-stable' = 2,
+                  'unstable' = 3)) -> data$stabitemp
+
+#convert stabstep
+revalue(data$stabstep, c('stable' = 1, 
+                  'mod-stable' = 2,
+                  'unstable' = 3)) -> data$stabstep
+
+#convert stabosat
+revalue(data$stabosat, c('stable' = 1, 
+                  'mod-stable' = 2,
+                  'unstable' = 3)) -> data$stabosat
+
+#convert deci
+revalue(data$deci, c('I' = 1, 
+                  'S' = 2,
+                  'A' = 3)) -> data$deci
+```
+
+Interesting, observation \[3,9\] is still an “**A**’. Need to convert
+manually.
+
+``` r
+#check observation [3,9]
+data$deci[[3]]
+```
+
+    ## [1] "A "
+
+``` r
+#change to a 3
+data[3, 9] = 3
+
+#another way to check [3,9] observation
+print(3,9)
+```
+
+    ## [1] 3
+
+Let’s see if all those conversations worked.
+
+``` r
+#final check
+summary(data)
+```
+
+    ##     itemp              stemp               osat                bp           
+    ##  Length:90          Length:90          Length:90          Length:90         
+    ##  Class :character   Class :character   Class :character   Class :character  
+    ##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+    ##   stabitemp           stabstep           stabosat             comf          
+    ##  Length:90          Length:90          Length:90          Length:90         
+    ##  Class :character   Class :character   Class :character   Class :character  
+    ##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+    ##      deci          
+    ##  Length:90         
+    ##  Class :character  
+    ##  Mode  :character
 
 ## Support Vector Machines
 

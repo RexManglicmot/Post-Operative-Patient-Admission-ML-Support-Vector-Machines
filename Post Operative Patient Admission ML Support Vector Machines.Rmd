@@ -7,8 +7,22 @@ output:
 ---
 
 ## Status: Continuing Working Document
+Hi everyone. I’m continuing building my data analysis and R skills. As such, I would love feedback to better improve this project via rexmanglicmot@gmail.com. Any mistakes and misrepresentation of the data are my own.
+
+Things Need to Do/Questions:
+
+* **find '?' FIRST BEFORE changing columns to factors, otherwise it will change the ? into 1.** (major self-inflicted headache)
+* Why is the "A" still there?
+* Need to take out the "?" in the dataset
+* Concept on SVM
+* Work on intro + cite sources
+
+
 
 ## Introduction
+
+![](https://anesthesiology.weill.cornell.edu/sites/default/files/resize/styles/panopoly_image_original/public/media_uploads/melvin_or_dsc_8144-864x485.jpg?itok=_1VvIWLc)
+
 
 The attributes are as follows:
 
@@ -27,6 +41,7 @@ high (> 130/90), mid (<= 130/90 and >= 90/70), low (< 90/70)
 
 5. SURF-STBL (stability of patient's surface temperature):
 stable, mod-stable, unstable
+
 6. CORE-STBL (stability of patient's core temperature)
 stable, mod-stable, unstable
 
@@ -43,8 +58,9 @@ A (patient sent to general hospital floor)
 
 ## Loading the Libraries
 ```{r, message=FALSE}
-library(tidyverse)
 
+library(tidyverse)
+library(plyr)
 ```
 
 
@@ -54,21 +70,24 @@ library(tidyverse)
 url <- 'https://archive.ics.uci.edu/ml/machine-learning-databases/postoperative-patient-data/post-operative.data'
 
 #load the data
-data <- read.csv(url, header=TRUE)
+data_orig <- read.csv(url, header=TRUE)
 ```
 
 ## Cleaning the Data
 **OH BOY**, we got some cleaning to do!
 ```{r}
 #view the first few rows of the data
-head(data)
-dim(data)
+head(data_orig)
+dim(data_orig)
 ```
 Calling the dim function, we have 89 rows and 9 columns. According to the UCI website, there should be 90 rows. It would seem that the column names are actually an observation and adding that back to the dataframe would make the dataset whole. Let's create a new row.
 
 Also, because the original column names are missing from the dataset, we would have to assume that the column names go in the order in which it was presented on the UCI website. As such, I will rename the columns accordingly. 
 
 ```{r}
+#make a cope
+data <- data_orig
+
 #add another row the the dataset filled with values from the column
 #row will added to the bottom of the dataset
 data[nrow(data) +1,] <- c('mid', 'low', 'excellent', 'mid', 'stable', 'stable', 'stable', '15', 'A')
@@ -82,17 +101,36 @@ colnames(data) <- c('itemp', 'stemp', 'osat', 'bp', 'stabitemp', 'stabstep', 'st
 #check if it worked
 names(data)
 ```
+
+
+```{r}
+#check for ?
+any(data =='?')
+
+#send location!
+which(data == '?', arr.ind=TRUE)
+```
+
+```{r}
+#find the uniques values in each column
+uni <- lapply(data_orig, unique)
+
+uni
+```
+
+
+
 Looks good!
 
 ```{r}
-#since most of the columns are fators lets change to factor class
-data <- as.data.frame(unclass(data), stringsAsFactors = TRUE)
+# #since most of the columns are fators lets change to factor class
+# data <- as.data.frame(unclass(data), stringsAsFactors = TRUE)
 
-#change comf column to a numeric class
-data$comf <- as.numeric(data$comf)
-
-#check the class of all columns 
-sapply(data, class)
+# #change comf column to a numeric class
+# data$comf <- as.numeric(data$comf)
+# 
+# #check the class of all columns 
+# sapply(data, class)
 ```
 Looks good!
 
@@ -115,11 +153,69 @@ sapply(data, function(x) sum(is.na(x)))
 ```
 Looks good!
 
-Convert the factors to numbers for model
-```{r}
+Convert the factors to numbers for modeling. Replace values in each of the appropriate columns.
+```{r, message = FALSE}
+#convert itemp column
+revalue(data$itemp, c('low' = 1, 
+                      'mid' = 2,
+                      'high' = 3)) -> data$itemp
 
+#convert stemp column
+revalue(data$stemp, c('low' = 1, 
+                      'mid' = 2,
+                      'high' = 3)) -> data$stemp
+
+#convert stemp osat
+revalue(data$osat, c('excellent' = 1, 
+                      'good' = 2,
+                      'fair' = 3,
+                     'poor' = 4)) -> data$osat
+
+#convert bp column
+revalue(data$bp, c('low' = 1, 
+                  'mid' = 2,
+                  'high' = 3)) -> data$bp
+
+#convert stabitemp
+revalue(data$stabitemp, c('stable' = 1, 
+                  'mod-stable' = 2,
+                  'unstable' = 3)) -> data$stabitemp
+
+#convert stabstep
+revalue(data$stabstep, c('stable' = 1, 
+                  'mod-stable' = 2,
+                  'unstable' = 3)) -> data$stabstep
+
+#convert stabosat
+revalue(data$stabosat, c('stable' = 1, 
+                  'mod-stable' = 2,
+                  'unstable' = 3)) -> data$stabosat
+
+#convert deci
+revalue(data$deci, c('I' = 1, 
+                  'S' = 2,
+                  'A' = 3)) -> data$deci
+```
+Interesting, observation [3,9] is still an "**A**'. Need to convert manually.
+
+```{r}
+#check observation [3,9]
+data$deci[[3]]
+
+#change to a 3
+data[3, 9] = 3
+
+#another way to check [3,9] observation
+print(3,9)
 ```
 
+Let's see if all those conversations worked. 
+```{r}
+#final check
+summary(data)
+
+
+```
 
 
 ## Support Vector Machines
