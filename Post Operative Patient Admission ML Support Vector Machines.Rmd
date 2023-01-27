@@ -20,8 +20,16 @@ Things Need to Do/Questions:
 
 
 ## Introduction
-
 ![](https://anesthesiology.weill.cornell.edu/sites/default/files/resize/styles/panopoly_image_original/public/media_uploads/melvin_or_dsc_8144-864x485.jpg?itok=_1VvIWLc)
+
+**"You can ask and advocate for a lot of things here, just don't ask for space."** -- CEO, "Hawaii" Hospital
+
+The quote above represents a memory during my time working in at influential and central hospital on the Hawaiian islands. Space has always been an issue and as such, the number of patients healthcare providers can provide is limited to space within the hospitals. Sometimes, patients may have to wait for a bed to clear or get squeezed into another patient room, obstructing the healing journey. Therefore, this decision by the hospital is subjective. There needs to be a more objective and quantitative rubric for admitting patients into the hospital, especially after surgery. 
+
+The objective for this project is as follows:
+
+1) Help clinicians decide if a patient will be admitted after surgery
+2) Provide numerical data such that Hospital C-Suites can plan and optimize hospital operations to maintain and improve patient hospital experiences.
 
 
 The attributes are as follows:
@@ -217,9 +225,18 @@ summary(data)
 
 ```
 
-
 ## Support Vector Machines
+SVMs are used for two-group classifications. In laymen terms, it finds the best fit line of separation called the 'hyperplane."
 
+Advantages of SVM:
+
+* Useful for high dimensional spaces
+* High speed and better performance if liminted observations (thosuands)
+* Useful for text classificaitons
+
+Disadvantages of SVM:
+
+* Do not provide probability estimate
 
 ## Limitations
 
