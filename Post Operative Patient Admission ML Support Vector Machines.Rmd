@@ -216,7 +216,11 @@ summary(data)
 ```
 
 ## Support Vector Machines
-SVMs are used for two-group classifications. In laymen terms, it finds the best fit line of separation called the 'hyperplane."
+SVMs are used for two-group classifications. SVM does this by calculating which line is best fitted to the data. In laymen terms, it finds the best fit line of separation called the 'hyperplane." Points that are distinguish far from the hyperplane can be easily classified whereas other points that are not are difficult. This is because these data points are close to the hyperplane and are called "support vectors." 
+
+SVM maximizes the margin surrounding the hyperplane (the "streets"). This is determine by the training data set and of course applied to the test data set.
+
+![](https://static.javatpoint.com/tutorial/machine-learning/images/support-vector-machine-algorithm.png)
 
 Advantages of SVM:
 
