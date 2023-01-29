@@ -12,6 +12,8 @@ Rex Manglicmot
     Data</a>
 -   <a href="#cleaning-the-data" id="toc-cleaning-the-data">Cleaning the
     Data</a>
+-   <a href="#exploratory-data-analysis"
+    id="toc-exploratory-data-analysis">Exploratory Data Analysis</a>
 -   <a href="#support-vector-machines"
     id="toc-support-vector-machines">Support Vector Machines</a>
 -   <a href="#limitations" id="toc-limitations">Limitations</a>
@@ -45,12 +47,18 @@ space.”** – CEO, “Hawaii” Hospital
 The quote above represents a memory during my time working in at
 influential and central hospital on the Hawaiian islands. Space has
 always been an issue and as such, the number of patients healthcare
-providers can provide is limited to space within the hospitals.
-Sometimes, patients may have to wait for a bed to clear or get squeezed
-into another patient room, obstructing the healing journey. Therefore,
-this decision by the hospital is subjective. There needs to be a more
-objective and quantitative rubric for admitting patients into the
-hospital, especially after surgery.
+providers can provide is limited to space within the hospitals. Many
+Hospitals have criteria of when to admit a patient after the ER and OR.
+While Hispitals go through this process, sometimes, patients may have to
+wait for a bed to clear or get squeezed into another patient room,
+obstructing the healing journey. One way we can help alleviate the bed
+issue is by predicting when a patient will likely need a roo after
+surgery whether if elected or not. It is only near the final stages of
+surgery, when discussions are amde whether to admist a patient.
+Therefore, this decision by the hospital is subjective based on the
+capacity of the hosptial staff, supplies, nursing staff, etc. There
+needs to be a more objective and quantitative rubric for admitting
+patients into the hospital , especially after surgery.
 
 The objective for this project is as follows:
 
@@ -58,6 +66,11 @@ The objective for this project is as follows:
 2)  Provide numerical data such that Hospital C-Suites can plan and
     optimize hospital operations to maintain and improve patient
     hospital experiences.
+
+A special acknowledgement to the University of Irvine’s Data Repository
+for hosting a wide range of datasets students could use.[^1] A special
+acknowledgement to Budihardjo et al.[^2] and Woolery et al.[^3] for
+providing the data therein their papers.
 
 The attributes are as follows:
 
@@ -354,35 +367,65 @@ summary(data)
     ##  Class :character  
     ##  Mode  :character
 
+## Exploratory Data Analysis
+
 ## Support Vector Machines
 
 SVMs are used for two-group classifications. SVM does this by
 calculating which line is best fitted to the data. In laymen terms, it
-finds the best fit line of separation called the ’hyperplane.” Points
-that are distinguish far from the hyperplane can be easily classified
-whereas other points that are not are difficult. This is because these
-data points are close to the hyperplane and are called “support
-vectors.”
+finds the best fit line of separation called the ’hyperplane.” This
+hyperplane helps segregate the two categories. Points that are
+distinguish far from the hyperplane can be easily classified whereas
+other points that are not are difficult. This is because these data
+points are close to the hyperplane and are called “support vectors.” The
+Maximum Margin (MM)refers to the maximum width of the support vectors.
+The MM is parallel to the hyplerplane.
 
 SVM maximizes the margin surrounding the hyperplane (the “streets”).
 This is determine by the training data set and of course applied to the
 test data set.
+
+Applications of vary from facial classification, text and handwriting
+classification, speech, cancer amongst many more.
 
 ![](https://static.javatpoint.com/tutorial/machine-learning/images/support-vector-machine-algorithm.png)
 
 Advantages of SVM:
 
 -   Useful for high dimensional spaces
+-   Useful for datasets where the number of dimensions \> number of
+    observations
 -   High speed and better performance if limited observations
     (thousands)
 -   Useful for text classifications
+-   Small datasets
 
 Disadvantages of SVM:
 
 -   Do not provide probability estimate
+-   Not useful for large datasets
+-   Computationally expensive
+-   Limitation to two-classifications
+-   Lack of probabilistic interpretation
+-   Not useful for datasets with missing values
+
+In this project, we will use SVM to predict if a patient will be
+admitted into the hospital following surgery.
 
 ## Limitations
 
 ## Conclusions
 
 ## Inspiration for this project
+
+[^1]: <https://archive.ics.uci.edu/ml/index.php>
+
+[^2]: A. Budihardjo, J. Grzymala-Busse, L. Woolery (1991). Program
+    LERS_LB 2.5 as a tool for knowledge acquisition in nursing,
+    Proceedings of the 4th Int. Conference on Industrial & Engineering
+    Applications of AI & Expert Systems, pp. 735-740.
+
+[^3]: L. Woolery, J. Grzymala-Busse, S. Summers, A. Budihardjo (1991).
+    The use of machine learning program LERS_LB 2.5 in knowledge
+    acquisition for expert system development in nursing. Computers in
+    Nursing 9, pp. 227-234.
