@@ -100,6 +100,7 @@ The attributes are as follows:
 ``` r
 library(tidyverse)
 library(plyr)
+library(ggplot2)
 ```
 
 ## Loading the Data
@@ -389,6 +390,32 @@ summary(data)
 Looks good. Now off to the best part, exploring the data!
 
 ## Exploratory Data Analysis
+
+Because we are dealing with nominal data the best way to visualize this
+is through a bar plot. To make the code simple, I decided to graph each
+variable against the number of distinct values therein.
+
+``` r
+#create barcharts for all variables using fewest lines of code possible. 
+ggplot(gather(data, cols, value), aes(x = value, fill=cols)) + 
+  geom_bar() + 
+  facet_wrap(.~cols, scales = 'free') + 
+  theme_dark()
+```
+
+    ## Warning: attributes are not identical across measure variables;
+    ## they will be dropped
+
+![](Post-Operative-Patient-Admission-ML-Support-Vector-Machines_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+Insights:
+
+-   The dependent variable, there seems to be more of the category 3
+    than 2 and 1.
+-   osat and stableitemp has equal distribution of data.
+-   comf and stabstep is more left skewed
+-   itemp and stemp looks like a normal distribution
+
+Now, let’s learn about SVMS theory.
 
 ## Support Vector Machines
 

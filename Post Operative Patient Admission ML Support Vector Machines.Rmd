@@ -62,6 +62,7 @@ A (patient sent to general hospital floor)
 ```{r, message=FALSE}
 library(tidyverse)
 library(plyr)
+library(ggplot2)
 ```
 
 ## Loading the Data
@@ -225,10 +226,22 @@ summary(data)
 Looks good. Now off to the best part, exploring the data!
 
 ## Exploratory Data Analysis
+Because we are dealing with nominal data the best way to visualize this is through a bar plot. To make the code simple, I decided to graph each variable against the number of distinct values therein. 
 ```{r}
-
+#create barcharts for all variables using fewest lines of code possible. 
+ggplot(gather(data, cols, value), aes(x = value, fill=cols)) + 
+  geom_bar() + 
+  facet_wrap(.~cols, scales = 'free') + 
+  theme_dark()
 ```
+Insights:
 
+* The dependent variable, there seems to be more of the category 3 than 2 and 1. 
+* osat and stableitemp has equal distribution of data.
+* comf and stabstep is more left skewed
+* itemp and stemp looks like a normal distribution
+
+Now, let's learn about SVMS theory.
 
 ## Support Vector Machines
 SVMs are used for two-group classifications. SVM does this by calculating which line is best fitted to the data. In laymen terms, it finds the best fit line of separation called the 'hyperplane." This hyperplane helps segregate the two categories. Points that are distinguish far from the hyperplane can be easily classified whereas other points that are not are difficult. This is because these data points are close to the hyperplane and are called "support vectors." The Maximum Margin (MM)refers to the maximum width of the support vectors. The MM is parallel to the hyplerplane.
