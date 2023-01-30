@@ -85,7 +85,7 @@ Calling the dim function, we have 89 rows and 9 columns. According to the UCI we
 Also, because the original column names are missing from the dataset, we would have to assume that the column names go in the order in which it was presented on the UCI website. As such, I will rename the columns accordingly. 
 
 ```{r}
-#make a cope
+#make a copy
 data <- data_orig
 
 #add another row the the dataset filled with values from the column
@@ -112,25 +112,34 @@ which(data == '?', arr.ind=TRUE)
 ```
 
 ```{r}
-#find the uniques values in each column
-uni <- lapply(data_orig, unique)
+#let's delete those observations with ? as we want our data to be tidy
+data <- data[-c(46, 48, 70),]
 
-uni
+#Check for ?
+any(data =='?')
 ```
 
+```{r}
+#row and column of said value
+any(data =='A ')
 
+#let's remove the "A "
+which(data == 'A ', arr.ind=TRUE)
 
-Looks good!
+#change value
+#change to a 3
+data[3, 9] = "A"
+
+#check observation [3,9]
+data$deci[[3]]
+```
+Good. Now, let's check all the unique values
 
 ```{r}
-# #since most of the columns are fators lets change to factor class
-# data <- as.data.frame(unclass(data), stringsAsFactors = TRUE)
+#find the uniques values in each column
+uni <- lapply(data, unique)
 
-# #change comf column to a numeric class
-# data$comf <- as.numeric(data$comf)
-# 
-# #check the class of all columns 
-# sapply(data, class)
+uni
 ```
 Looks good!
 
@@ -196,26 +205,25 @@ revalue(data$deci, c('I' = 1,
                   'S' = 2,
                   'A' = 3)) -> data$deci
 ```
-Interesting, observation [3,9] is still an "**A**'. Need to convert manually.
 
+Need to covert into factors except comf which is an integer
 ```{r}
-#check observation [3,9]
-data$deci[[3]]
+#convert all columns into a factor
+data <- data.frame(lapply(data, factor))
 
-#change to a 3
-data[3, 9] = 3
+#convert comf into a integer
+data$comf <- as.numeric(as.character(data$comf))
 
-#another way to check [3,9] observation
-print(3,9)
+#let's check
+sapply(data, class)
 ```
-
-Let's see if all those conversations worked. 
+One final check
 ```{r}
 #final check
 summary(data)
-
-
 ```
+Looks good. Now off to the best part, exploring the data!
+
 ## Exploratory Data Analysis
 ```{r}
 
@@ -261,3 +269,20 @@ In this project, we will use SVM to predict if a patient will be admitted into t
 ## Conclusions
 
 ## Inspiration for this project 
+
+## Appendix Code
+```{r}
+# #where is the "?"
+# 
+# #check observation [3,9]
+# data$deci[[3]]
+# 
+# #change to a 3
+# data[3, 9] = 3
+# 
+# #another way to check [3,9] observation
+# print(3,9)
+```
+
+```
+

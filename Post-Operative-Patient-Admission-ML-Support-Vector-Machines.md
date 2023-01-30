@@ -20,6 +20,7 @@ Rex Manglicmot
 -   <a href="#conclusions" id="toc-conclusions">Conclusions</a>
 -   <a href="#inspiration-for-this-project"
     id="toc-inspiration-for-this-project">Inspiration for this project</a>
+-   <a href="#appendix-code" id="toc-appendix-code">Appendix Code</a>
 
 ## Status: Continuing Working Document
 
@@ -145,7 +146,7 @@ was presented on the UCI website. As such, I will rename the columns
 accordingly.
 
 ``` r
-#make a cope
+#make a copy
 data <- data_orig
 
 #add another row the the dataset filled with values from the column
@@ -188,51 +189,76 @@ which(data == '?', arr.ind=TRUE)
     ## 70  70   8
 
 ``` r
+#let's delete those observations with ? as we want our data to be tidy
+data <- data[-c(46, 48, 70),]
+
+#Check for ?
+any(data =='?')
+```
+
+    ## [1] FALSE
+
+``` r
+#row and column of said value
+any(data =='A ')
+```
+
+    ## [1] TRUE
+
+``` r
+#let's remove the "A "
+which(data == 'A ', arr.ind=TRUE)
+```
+
+    ##   row col
+    ## 3   3   9
+
+``` r
+#change value
+#change to a 3
+data[3, 9] = "A"
+
+#check observation [3,9]
+data$deci[[3]]
+```
+
+    ## [1] "A"
+
+Good. Now, let’s check all the unique values
+
+``` r
 #find the uniques values in each column
-uni <- lapply(data_orig, unique)
+uni <- lapply(data, unique)
 
 uni
 ```
 
-    ## $mid
+    ## $itemp
     ## [1] "mid"  "high" "low" 
     ## 
-    ## $low
+    ## $stemp
     ## [1] "high" "low"  "mid" 
     ## 
-    ## $excellent
+    ## $osat
     ## [1] "excellent" "good"     
     ## 
-    ## $mid.1
+    ## $bp
     ## [1] "high" "mid"  "low" 
     ## 
-    ## $stable
+    ## $stabitemp
     ## [1] "stable"   "unstable"
     ## 
-    ## $stable.1
+    ## $stabstep
     ## [1] "stable"     "unstable"   "mod-stable"
     ## 
-    ## $stable.2
+    ## $stabosat
     ## [1] "stable"     "mod-stable" "unstable"  
     ## 
-    ## $X15
-    ## [1] "10" "15" "05" "07" "?" 
+    ## $comf
+    ## [1] "10" "15" "05" "07"
     ## 
-    ## $A
-    ## [1] "S"  "A"  "A " "I"
-
-Looks good!
-
-``` r
-# #since most of the columns are fators lets change to factor class
-# data <- as.data.frame(unclass(data), stringsAsFactors = TRUE)
-
-# #change comf column to a numeric class
-# data$comf <- as.numeric(data$comf)
-# 
-# #check the class of all columns 
-# sapply(data, class)
-```
+    ## $deci
+    ## [1] "S" "A" "I"
 
 Looks good!
 
@@ -327,45 +353,40 @@ revalue(data$deci, c('I' = 1,
                   'A' = 3)) -> data$deci
 ```
 
-Interesting, observation \[3,9\] is still an “**A**’. Need to convert
-manually.
+Need to covert into factors except comf which is an integer
 
 ``` r
-#check observation [3,9]
-data$deci[[3]]
+#convert all columns into a factor
+data <- data.frame(lapply(data, factor))
+
+#convert comf into a integer
+data$comf <- as.numeric(as.character(data$comf))
+
+#let's check
+sapply(data, class)
 ```
 
-    ## [1] "A "
+    ##     itemp     stemp      osat        bp stabitemp  stabstep  stabosat      comf 
+    ##  "factor"  "factor"  "factor"  "factor"  "factor"  "factor"  "factor" "numeric" 
+    ##      deci 
+    ##  "factor"
 
-``` r
-#change to a 3
-data[3, 9] = 3
-
-#another way to check [3,9] observation
-print(3,9)
-```
-
-    ## [1] 3
-
-Let’s see if all those conversations worked.
+One final check
 
 ``` r
 #final check
 summary(data)
 ```
 
-    ##     itemp              stemp               osat                bp           
-    ##  Length:90          Length:90          Length:90          Length:90         
-    ##  Class :character   Class :character   Class :character   Class :character  
-    ##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
-    ##   stabitemp           stabstep           stabosat             comf          
-    ##  Length:90          Length:90          Length:90          Length:90         
-    ##  Class :character   Class :character   Class :character   Class :character  
-    ##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
-    ##      deci          
-    ##  Length:90         
-    ##  Class :character  
-    ##  Mode  :character
+    ##  itemp  stemp  osat   bp     stabitemp stabstep stabosat      comf       deci  
+    ##  1:18   1:24   1:41   1: 3   1:44      1:81     1:45     Min.   : 5.00   1: 1  
+    ##  2:57   2:47   2:46   2:56   3:43      2: 1     2:21     1st Qu.:10.00   2:24  
+    ##  3:12   3:16          3:28             3: 5     3:21     Median :10.00   3:62  
+    ##                                                          Mean   :10.94         
+    ##                                                          3rd Qu.:10.00         
+    ##                                                          Max.   :15.00
+
+Looks good. Now off to the best part, exploring the data!
 
 ## Exploratory Data Analysis
 
@@ -417,6 +438,23 @@ admitted into the hospital following surgery.
 ## Conclusions
 
 ## Inspiration for this project
+
+## Appendix Code
+
+``` r
+# #where is the "?"
+# 
+# #check observation [3,9]
+# data$deci[[3]]
+# 
+# #change to a 3
+# data[3, 9] = 3
+# 
+# #another way to check [3,9] observation
+# print(3,9)
+```
+
+\`\`\`
 
 [^1]: <https://archive.ics.uci.edu/ml/index.php>
 
