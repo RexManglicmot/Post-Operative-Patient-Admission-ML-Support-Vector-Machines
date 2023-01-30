@@ -391,7 +391,7 @@ Looks good. Now off to the best part, exploring the data!
 
 ## Exploratory Data Analysis
 
-Because we are dealing with nominal data the best way to visualize this
+Because we are dealing with ordinal data the best way to visualize this
 is through a bar plot. To make the code simple, I decided to graph each
 variable against the number of distinct values therein.
 
@@ -407,6 +407,7 @@ ggplot(gather(data, cols, value), aes(x = value, fill=cols)) +
     ## they will be dropped
 
 ![](Post-Operative-Patient-Admission-ML-Support-Vector-Machines_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
 Insights:
 
 -   The dependent variable, there seems to be more of the category 3

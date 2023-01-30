@@ -226,7 +226,7 @@ summary(data)
 Looks good. Now off to the best part, exploring the data!
 
 ## Exploratory Data Analysis
-Because we are dealing with nominal data the best way to visualize this is through a bar plot. To make the code simple, I decided to graph each variable against the number of distinct values therein. 
+Because we are dealing with ordinal data the best way to visualize this is through a bar plot. To make the code simple, I decided to graph each variable against the number of distinct values therein. 
 ```{r}
 #create barcharts for all variables using fewest lines of code possible. 
 ggplot(gather(data, cols, value), aes(x = value, fill=cols)) + 
@@ -234,6 +234,7 @@ ggplot(gather(data, cols, value), aes(x = value, fill=cols)) +
   facet_wrap(.~cols, scales = 'free') + 
   theme_dark()
 ```
+
 Insights:
 
 * The dependent variable, there seems to be more of the category 3 than 2 and 1. 
