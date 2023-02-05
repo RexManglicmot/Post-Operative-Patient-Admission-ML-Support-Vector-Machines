@@ -31,10 +31,9 @@ data are my own.
 
 Things Need to Do/Questions:
 
--   **find ‘?’ FIRST BEFORE changing columns to factors, otherwise it
-    will change the ? into 1.** (major self-inflicted headache)
--   Why is the “A” still there?
--   Need to take out the “?” in the dataset
+-   SVM the right model for this dataset? Need to look into it further
+-   I think I may need to use a different model like Bagging (Bootstrap
+    Aggregating) instead of SVM
 -   Concept on SVM
 -   Work on intro + cite sources
 
@@ -101,6 +100,7 @@ The attributes are as follows:
 library(tidyverse)
 library(plyr)
 library(ggplot2)
+library(e1071)
 ```
 
 ## Loading the Data
@@ -460,6 +460,42 @@ Disadvantages of SVM:
 
 In this project, we will use SVM to predict if a patient will be
 admitted into the hospital following surgery.
+
+``` r
+#create model
+model <- svm(deci~., data=data)
+
+#summary
+summary(model)
+```
+
+    ## 
+    ## Call:
+    ## svm(formula = deci ~ ., data = data)
+    ## 
+    ## 
+    ## Parameters:
+    ##    SVM-Type:  C-classification 
+    ##  SVM-Kernel:  radial 
+    ##        cost:  1 
+    ## 
+    ## Number of Support Vectors:  69
+    ## 
+    ##  ( 24 44 1 )
+    ## 
+    ## 
+    ## Number of Classes:  3 
+    ## 
+    ## Levels: 
+    ##  1 2 3
+
+``` r
+#does the x and y need to be quantitative variables???
+
+#plot(model, data=data,
+     #comf~stemp
+     #)
+```
 
 ## Limitations
 

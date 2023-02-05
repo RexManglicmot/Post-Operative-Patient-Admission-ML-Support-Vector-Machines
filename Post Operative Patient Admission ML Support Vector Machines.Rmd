@@ -12,6 +12,7 @@ Hi everyone. I’m continuing building my data analysis and R skills. As such, I
 Things Need to Do/Questions:
 
 * SVM the right model for this dataset? Need to look into it further
+* I think I may need to use a different model like Bagging (Bootstrap Aggregating) instead of SVM
 * Concept on SVM
 * Work on intro + cite sources
 
@@ -284,7 +285,7 @@ summary(model)
 
 #plot(model, data=data,
      #comf~stemp
-     )
+     #)
 ```
 
 
